@@ -1,0 +1,348 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "NA",
+    "description": "trial",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/books": {
+      "get": {
+        "description": "Get books in library from database",
+        
+        "responses": {
+          "200": {
+            "description": "Success to get book list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Add a new book, only admin can do it",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Book"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success to create a new book"
+          }
+        }
+      }
+    },
+    "/books/{isbn}": {
+      "get": {
+        "description": "Get specific book's information",
+        "parameters": [
+          {
+            "name": "isbn",
+            "in": "path",
+            "description": "Book's ISBN",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "example": "123456"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success to get a specific book's information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/books/{isbn}/borrowBook": {
+      "put": {
+        "description": "Borrow this book",
+        "parameters": [
+          {
+            "name": "isbn",
+            "in": "path",
+            "description": "Book's ISBN",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "example": "123456"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BorrowBookAction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success to borrow this book"
+          }
+        }
+      }
+    },
+    "/books/{isbn}/returnBook": {
+      "put": {
+        "description": "Return this book",
+        "parameters": [
+          {
+            "name": "isbn",
+            "in": "path",
+            "description": "Book's ISBN",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "example": "123456"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReturnBookAction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success to return book"
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "description": "Sign up a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success to create a new user"
+          }
+        }
+      }
+    },
+    "/user/{userId}": {
+      "put": {
+        "description": "Update user's informations",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User's id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "example": "8"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success to update user's information"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "description": "Sign in",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginAction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success to log in"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Book": {
+        "properties": {
+          "ISBN": {
+            "type": "string",
+            "example": "123456"
+          },
+          "title": {
+            "type": "string",
+            "example": "Swagger"
+          },
+          "description": {
+            "type": "string",
+            "example": "Rest API"
+          },
+          "publisher": {
+            "type": "string",
+            "example": "ABC"
+          },
+          "status": {
+            "type": "string",
+            "example": "available"
+          },
+          "borrowerId": {
+            "type": "string",
+            "nullable": true,
+            "example": "5"
+          },
+          "borrowDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "04/02/2022"
+          },
+          "returnDate": {
+            "type": "string",
+            "nullable": true,
+            "example": "09/02/2022"
+          }
+        },
+        "description": "Book model"
+      },
+      "BorrowBookAction": {
+        "properties": {
+          "borrowerId": {
+            "type": "string",
+            "example": "5"
+          },
+          "borrowDate": {
+            "type": "string",
+            "example": "04/02/2022"
+          },
+          "returnDate": {
+            "type": "string",
+            "example": "09/02/2022"
+          }
+        },
+        "description": "Borrow book"
+      },
+      "ReturnBookAction": {
+        "properties": {
+          "borrowerId": {
+            "type": "string",
+            "example": "5"
+          },
+          "borrowDate": {
+            "type": "string",
+            "example": "04/02/2022"
+          },
+          "returnDate": {
+            "type": "string",
+            "example": "09/02/2022"
+          },
+          "status": {
+            "type": "string",
+            "example": "available"
+          }
+        },
+        "description": "Return book"
+      },
+      "User": {
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "8"
+          },
+          "username": {
+            "type": "string",
+            "example": "user"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "Dat"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Phan"
+          },
+          "email": {
+            "type": "string",
+            "example": "tanuj@webileapps.com"
+          }
+        },
+        "description": "User"
+      },
+      "LoginAction": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "user"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
+        },
+        "description": "Login"
+      }
+    }
+  }
+}
